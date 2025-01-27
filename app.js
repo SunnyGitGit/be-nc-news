@@ -1,16 +1,27 @@
 const express = require("express");
 const app = express();
 const endpointJson  = require("./endpoints.json");
-const { handlePSQLErrors, handleCustomErrors, handleServerErrors, handleReferenceErrors } = require("./errors/errors")
+const { getTopics } = require("./controllers/topics-controllers")
+const { handlePSQLErrors, handleCustomErrors, handleServerErrors, handleNotFoundErrors } = require("./errors/errors")
+
+app.use(express.json());
 
 app.get("/api", (req, res, next) => {
     res.status(200).send({ endpoints: endpointJson });
   });
 
+app.get("/api/topics", getTopics);
+
+
+app.all('*', (req, res) => {
+    res.status(404).send({ msg: "Not Found" });
+  });
+
 app.use(handlePSQLErrors);
-app.use(handleReferenceErrors);
+app.use(handleNotFoundErrors);
 app.use(handleCustomErrors);
 app.use(handleServerErrors);
 
 
 module.exports = app;
+
