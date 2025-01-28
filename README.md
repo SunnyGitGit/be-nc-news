@@ -13,6 +13,20 @@
 (Double check that these .env files are .gitignored)
 
 
+## GET /api 
+- be available on /api
+- make all other endpoints available
+
+
+## GET /api/topics
+- get all topics
+- consider handling a 500 error in your app
+
+
+## GET /api/articles/:article_id
+- get an article by it id
+- consider what errors fould occur
+
 
 
 
