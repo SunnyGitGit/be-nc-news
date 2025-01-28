@@ -1,7 +1,8 @@
 const { fetchTopics,
         fetchArticleById ,
         fetchArticles,
-        fetchArticleComments
+        fetchArticleComments,
+        insertArticleComment,
     } = require("../models/topics-models");
 
 exports.getTopics = (req, res, next) => {
@@ -9,9 +10,7 @@ exports.getTopics = (req, res, next) => {
     .then((topics) => {
         res.status(200).send({ topics });
     })
-    .catch((err) => {
-        next(err);
-    });
+    .catch(next);
 };
 
 exports.getArticleById = (req, res, next) => {
@@ -21,9 +20,7 @@ exports.getArticleById = (req, res, next) => {
     .then((article) => {
         res.status(200).send({ article });
     })
-    .catch((err) => {
-        next(err);
-    });
+    .catch(next);
 };
 
 exports.getArticles = (req, res, next) => {
@@ -33,9 +30,7 @@ exports.getArticles = (req, res, next) => {
     .then((articles) => {
         res.status(200).send({ articles });
     })
-    .catch((err) => {
-        next(err);
-    });
+    .catch(next);
 };
 
 exports.getArticleComments = (req, res, next) => {
@@ -45,7 +40,19 @@ exports.getArticleComments = (req, res, next) => {
     .then((comments) => {
         res.status(200).send({ comments });
     })
-    .catch((err) => {
-        next(err);
-    });
+    .catch(next);
+};
+
+exports.postArticleComment = (req, res, next) => {
+    const { article_id } = req.params;
+    const { username, body } = req.body;
+    if (!username || !body) {
+        return res.status(400).send({ msg: "Bad Request" });
+    }
+
+    insertArticleComment(article_id, username, body)
+    .then((comment) => {
+        res.status(201).send({ comment });
+    })
+    .catch(next);
 };

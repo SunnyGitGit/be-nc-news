@@ -179,3 +179,58 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: Responses with the posted comment for an article", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is a new comment"
+    }
+    const article_id = 3;
+
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        const { comment } = response.body;
+        console.log(comment);
+        expect(comment).toHaveProperty("comment_id");
+        expect(comment).toHaveProperty("votes", 0);
+        expect(comment).toHaveProperty("created_at");
+        expect(comment).toHaveProperty("author", newComment.username);
+        expect(comment).toHaveProperty("body", newComment.body);
+        expect(comment).toHaveProperty("article_id", 3);
+    });
+  });
+  test("404: Responses with an error if article ID is not found", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is a new comment"
+    }
+    const article_id = 9999;
+
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not Found");
+      });
+  });
+  test("404: Responses with an error if an invalid username is provided", () => {
+    const newComment = {
+      username: "Invalid username",
+      body: "This is a new comment"
+    }
+    const article_id = 3;
+
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not Found");
+      });
+  });
+});
