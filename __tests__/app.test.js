@@ -4,6 +4,7 @@ const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
+require('jest-sorted');
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -80,6 +81,59 @@ describe("GET /api/articles/:article_id", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+});
+
+
+describe("GET /api/articles", () => {
+  test("200: Responses with an array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { articles } = response.body;
+
+        expect(Array.isArray(articles)).toBe(true);
+        articles.forEach((article) => {
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes");
+          expect(article).toHaveProperty("article_img_url");
+          expect(article).toHaveProperty("comment_count");
+        });
+      });
+  });
+  test("200: Should be able to order by created_at in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=created_at&order=desc")
+      .expect(200)
+      .then((response) => {
+        const { articles } = response.body;
+
+        expect(articles).toBeSorted({ 
+          key: "created_at", 
+          descending: true
+      });
+    });
+  });
+  test("400: Responses with an error if an invalid sort_by parameter is provided", () => {
+    return request(app)
+      .get("/api/articles?sort_by=created&order=desc")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  test("400: Responses with an error if an invalid order parameter is provided", () => {
+    return request(app)
+      .get("/api/articles?sort_by=created_at&order=invalid")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
       });
   });
 });
