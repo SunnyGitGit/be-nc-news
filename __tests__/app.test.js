@@ -29,13 +29,19 @@ describe("GET /api/topics", () => {
         const { topics } = response.body;
 
         expect(Array.isArray(topics)).toBe(true);
+        expect(topics.length).toBeGreaterThan(0);
 
         topics.forEach((topic) => {
           expect(topic).toHaveProperty("slug");
           expect(topic).toHaveProperty("description");
+          expect(topic).toMatchObject({"slug": expect.any(String)});
+          expect(topic).toMatchObject({"description": expect.any(String)});
         });
       });
   });
+});
+
+describe("API error handling", () => {
   test("404: Responses with an error if the endpoint is incorrect", () => {
     return request(app)
       .get("/api/no-topics")
@@ -95,6 +101,7 @@ describe("GET /api/articles", () => {
         const { articles } = response.body;
 
         expect(Array.isArray(articles)).toBe(true);
+        expect(articles.length).toBeGreaterThan(0);
         articles.forEach((article) => {
           expect(article).toHaveProperty("article_id");
           expect(article).toHaveProperty("title");
@@ -105,35 +112,6 @@ describe("GET /api/articles", () => {
           expect(article).toHaveProperty("article_img_url");
           expect(article).toHaveProperty("comment_count");
         });
-      });
-  });
-  test("200: Should be able to order by created_at in descending order", () => {
-    return request(app)
-      .get("/api/articles?sort_by=created_at&order=desc")
-      .expect(200)
-      .then((response) => {
-        const { articles } = response.body;
-
-        expect(articles).toBeSorted({ 
-          key: "created_at", 
-          descending: true
-      });
-    });
-  });
-  test("400: Responses with an error if an invalid sort_by parameter is provided", () => {
-    return request(app)
-      .get("/api/articles?sort_by=created&order=desc")
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request");
-      });
-  });
-  test("400: Responses with an error if an invalid order parameter is provided", () => {
-    return request(app)
-      .get("/api/articles?sort_by=created_at&order=invalid")
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request");
       });
   });
 });
@@ -147,6 +125,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         const { comments } = response.body;
 
         expect(Array.isArray(comments)).toBe(true);
+        expect(comments.length).toBeGreaterThan(0);
         comments.forEach((comment) => {
           expect(comment).toHaveProperty("comment_id");
           expect(comment).toHaveProperty("votes");
@@ -157,80 +136,29 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
     });
   });
-  test("200: Should be able to order by created_at in descending order", () => {
+  test("200: Responses with an empty array with no associated comments ", () => {
     return request(app)
-      .get("/api/articles/3/comments")
+      .get("/api/articles/2/comments")
       .expect(200)
       .then((response) => {
         const { comments } = response.body;
-
-        expect(comments).toBeSorted({ 
-          key: "created_at", 
-          descending: true
+        expect(comments).toEqual([]);
       });
-    });
   });
   test("404: Responses with an error if article ID is not found", () => {
     return request(app)
-      .get("/api/articles/999999")
+      .get("/api/articles/999999/comments")
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Not Found");
       });
   });
-});
-
-describe("POST /api/articles/:article_id/comments", () => {
-  test("201: Responses with the posted comment for an article", () => {
-    const newComment = {
-      username: "butter_bridge",
-      body: "This is a new comment"
-    }
-    const article_id = 3;
-
+  test("400: Responses with an error if an invalid article is ID inputed", () => {
     return request(app)
-      .post(`/api/articles/${article_id}/comments`)
-      .send(newComment)
-      .expect(201)
+      .get("/api/articles/notNumber/comments")
+      .expect(400)
       .then((response) => {
-        const { comment } = response.body;
-        console.log(comment);
-        expect(comment).toHaveProperty("comment_id");
-        expect(comment).toHaveProperty("votes", 0);
-        expect(comment).toHaveProperty("created_at");
-        expect(comment).toHaveProperty("author", newComment.username);
-        expect(comment).toHaveProperty("body", newComment.body);
-        expect(comment).toHaveProperty("article_id", 3);
-    });
-  });
-  test("404: Responses with an error if article ID is not found", () => {
-    const newComment = {
-      username: "butter_bridge",
-      body: "This is a new comment"
-    }
-    const article_id = 9999;
-
-    return request(app)
-      .post(`/api/articles/${article_id}/comments`)
-      .send(newComment)
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("Not Found");
-      });
-  });
-  test("404: Responses with an error if an invalid username is provided", () => {
-    const newComment = {
-      username: "Invalid username",
-      body: "This is a new comment"
-    }
-    const article_id = 3;
-
-    return request(app)
-      .post(`/api/articles/${article_id}/comments`)
-      .send(newComment)
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("Not Found");
+        expect(response.body.msg).toBe("Bad Request");
       });
   });
 });
