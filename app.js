@@ -1,8 +1,18 @@
 const express = require("express");
 const app = express();
 const endpointJson  = require("./endpoints.json");
-const { getTopics, getArticleById, getArticles, getArticleComments, postArticleComment } = require("./controllers/topics-controllers")
-const { handlePSQLErrors, handleCustomErrors, handleServerErrors, handleNotFoundErrors } = require("./errors/errors")
+const { getTopics, 
+        getArticleById, 
+        getArticles, 
+        getArticleComments, 
+        postArticleComment,
+        patchArticleById, 
+      } = require("./controllers/topics-controllers")
+const { handlePSQLErrors, 
+        handleCustomErrors, 
+        handleServerErrors, 
+        handleNotFoundErrors 
+      } = require("./errors/errors")
 
 app.use(express.json());
 
@@ -15,13 +25,13 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getArticleComments);
 app.post("/api/articles/:article_id/comments", postArticleComment);
+app.patch("/api/articles/:article_id", patchArticleById);
 
 app.all('*', (req, res) => {
     res.status(404).send({ msg: "Not Found" });
   });
 
 app.use(handlePSQLErrors);
-app.use(handleNotFoundErrors);
 app.use(handleCustomErrors);
 app.use(handleServerErrors);
 

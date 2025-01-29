@@ -153,7 +153,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(response.body.msg).toBe("Not Found");
       });
   });
-  test("400: Responses with an error if an invalid article is ID inputed", () => {
+  test("400: Responses with an error if an invalid article ID is provided", () => {
     return request(app)
       .get("/api/articles/notNumber/comments")
       .expect(400)
@@ -215,5 +215,62 @@ describe("POST /api/articles/:article_id/comments", () => {
       .then((response) => {
         expect(response.body.msg).toBe("Not Found");
       });
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: Returns updated article with increment votes", () => {
+    const incrementVotes = {
+      inc_votes: 1
+    };
+    const article_id = 1;
+
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .send(incrementVotes)
+      .expect(200)
+      .then((response) => {
+        const { article } = response.body;
+
+        expect(article.votes).toBeGreaterThan(0);
+      });
+  });
+  test("200: Returns updated article with decrement votes", () => {
+    const decrementVotes = {
+      inc_votes: -10
+    };
+    const article_id = 1;
+
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .send(decrementVotes)
+      .expect(200)
+      .then(( response ) => {
+        const { article } = response.body;
+
+        console.log(article);
+        expect(article).toMatchObject({
+          article_id: 1,
+          votes: expect.any(Number)
+        });
+      });
+  });
+  test("404: Responses with error if article ID is not found", () => {
+    return request(app)
+      .patch('/api/articles/9999')
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not Found");
+      });
+  });
+  test("400: Responses with an error if an invalid article ID is provided", () => {
+    return request(app)
+      .patch('/api/articles/notNumber')
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+    });
   });
 });
