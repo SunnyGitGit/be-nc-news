@@ -3,6 +3,7 @@ const { fetchTopics,
         fetchArticles,
         fetchArticleComments,
         insertArticleComment,
+        updateArticleById,
     } = require("../models/topics-models");
 
 exports.getTopics = (req, res, next) => {
@@ -51,6 +52,21 @@ exports.postArticleComment = (req, res, next) => {
     insertArticleComment(article_id, username, body)
     .then((comment) => {
         res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
+exports.patchArticleById = (req, res, next) => {
+    const { article_id } = req.params;
+    const { inc_votes } = req.body;
+
+    if (typeof inc_votes !== 'number') {
+        return next({ status: 400, msg: "Bad Request" });
+    };
+
+    updateArticleById(article_id, inc_votes)
+    .then((article) => {
+        res.status(200).send({ article });
     })
     .catch(next);
 };
