@@ -3,14 +3,11 @@ const { fetchTopics,
         fetchArticles
     } = require("../models/topics-models");
 
-exports.getTopics = (req, res, next) => {
+exports.getTopics = (req, res) => {
     fetchTopics()
     .then((topics) => {
         res.status(200).send({ topics });
     })
-    .catch((err) => {
-        next(err);
-    });
 };
 
 exports.getArticleById = (req, res, next) => {
@@ -25,14 +22,9 @@ exports.getArticleById = (req, res, next) => {
     });
 };
 
-exports.getArticles = (req, res, next) => {
-    const queries = req.query;
-
-    fetchArticles(queries)
+exports.getArticles = (req, res) => {
+    fetchArticles()
     .then((articles) => {
         res.status(200).send({ articles });
     })
-    .catch((err) => {
-        next(err);
-    });
 };
