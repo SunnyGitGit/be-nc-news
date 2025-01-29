@@ -1,12 +1,10 @@
 const endpointsJson = require("../endpoints.json");
-/* Set up your test imports here */
 const request = require("supertest");
 const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
 
-/* Set up your beforeEach & afterAll functions here */
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
@@ -30,13 +28,18 @@ describe("GET /api/topics", () => {
         const { topics } = response.body;
 
         expect(Array.isArray(topics)).toBe(true);
-
+        expect(topics.length).toBeGreaterThan(0);
         topics.forEach((topic) => {
           expect(topic).toHaveProperty("slug");
           expect(topic).toHaveProperty("description");
+          expect(topic).toMatchObject({"slug": expect.any(String)});
+          expect(topic).toMatchObject({"description": expect.any(String)});
         });
       });
   });
+});
+
+describe("API error handling", () => {
   test("404: Responses with an error if the endpoint is incorrect", () => {
     return request(app)
       .get("/api/no-topics")
