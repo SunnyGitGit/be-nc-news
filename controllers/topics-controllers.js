@@ -10,7 +10,6 @@ exports.getTopics = (req, res, next) => {
     .then((topics) => {
         res.status(200).send({ topics });
     })
-    .catch(next);
 };
 
 exports.getArticleById = (req, res, next) => {
@@ -30,7 +29,6 @@ exports.getArticles = (req, res, next) => {
     .then((articles) => {
         res.status(200).send({ articles });
     })
-    .catch(next);
 };
 
 exports.getArticleComments = (req, res, next) => {
@@ -46,7 +44,7 @@ exports.getArticleComments = (req, res, next) => {
 exports.postArticleComment = (req, res, next) => {
     const { article_id } = req.params;
     const { username, body } = req.body;
-    if (!username || !body) {
+    if (!body) {
         return res.status(400).send({ msg: "Bad Request" });
     }
 
