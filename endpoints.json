@@ -40,7 +40,7 @@
     }
   },
   "POST /api/topics": {
-    "description": "Create a new topic",
+    "description": "Creates a new topic",
     "body": {
       "description": "Footie!",
       "slug": "football"
@@ -71,5 +71,30 @@
         }
       ]
     }
+  },
+  "PATCH /api/articles": {
+    "description": "Updates an article",
+    "queries": ["inc_vores"],
+    "exampleResponse": {
+      "articles": [
+        {
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": "2018-05-30T15:59:13.341Z",
+          "votes": 0,
+          "comment_count": 6
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments": {
+    "description": "Deletes comment by comment ID",
+    "body": {
+      "name": "comment_id", 
+      "description": "The comment to be deleted"
+    },
+    "exampleResponse": {}
   }
 }
