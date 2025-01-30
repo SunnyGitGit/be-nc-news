@@ -32,6 +32,7 @@ exports.getArticles = (req, res, next) => {
     .then((articles) => {
         res.status(200).send({ articles });
     })
+    .catch(next);
 };
 
 exports.getArticleComments = (req, res, next) => {
@@ -47,9 +48,6 @@ exports.getArticleComments = (req, res, next) => {
 exports.postArticleComment = (req, res, next) => {
     const { article_id } = req.params;
     const { username, body } = req.body;
-    if (!body) {
-        return res.status(400).send({ msg: "Bad Request" });
-    }
 
     insertArticleComment(article_id, username, body)
     .then((comment) => {
@@ -61,10 +59,6 @@ exports.postArticleComment = (req, res, next) => {
 exports.patchArticleById = (req, res, next) => {
     const { article_id } = req.params;
     const { inc_votes } = req.body;
-
-    if (typeof inc_votes !== 'number') {
-        return next({ status: 400, msg: "Bad Request" });
-    };
 
     updateArticleById(article_id, inc_votes)
     .then((article) => {
