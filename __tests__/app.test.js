@@ -248,7 +248,6 @@ describe("PATCH /api/articles/:article_id", () => {
       .then(( response ) => {
         const { article } = response.body;
 
-        console.log(article);
         expect(article).toMatchObject({
           article_id: 1,
           votes: expect.any(Number)
@@ -272,5 +271,34 @@ describe("PATCH /api/articles/:article_id", () => {
       .then((response) => {
         expect(response.body.msg).toBe("Bad Request");
     });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Responses with deleted comments by id", () => {
+    const comment_id = 4;
+
+    return request(app)
+      .delete(`/api/comments/${comment_id}`)
+      .expect(204)
+      .then((response) => {
+        expect(response.body).toEqual({});
+      });
+  });
+  test("404: Responses with an error if comment ID is not found", () => {
+    return request(app)
+      .delete('/api/comments/9999')
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toEqual("Not Found");
+      });
+  });
+  test("400: Responses with an error if an invalid comment ID is provided", () => {
+    return request(app)
+      .delete('/api/comments/notNumber')
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toEqual("Bad Request");
+      });
   });
 });

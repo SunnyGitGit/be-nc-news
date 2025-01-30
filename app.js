@@ -6,7 +6,8 @@ const { getTopics,
         getArticles, 
         getArticleComments, 
         postArticleComment,
-        patchArticleById, 
+        patchArticleById,
+        deleteCommentById, 
       } = require("./controllers/topics-controllers")
 const { handlePSQLErrors, 
         handleCustomErrors, 
@@ -26,6 +27,7 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getArticleComments);
 app.post("/api/articles/:article_id/comments", postArticleComment);
 app.patch("/api/articles/:article_id", patchArticleById);
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.all('*', (req, res) => {
     res.status(404).send({ msg: "Not Found" });
