@@ -103,7 +103,7 @@ describe("GET /api/articles", () => {
         });
       });
   });
-  test("200: Responses with articles sorted by create_at in defualt order", () => {
+  test("200: Responses with articles sorted by create_at with a default order", () => {
     return request(app)
       .get("/api/articles?sort_by=created_at")
       .expect(200)
@@ -117,7 +117,7 @@ describe("GET /api/articles", () => {
       });
     });
   });
-  test("200: Responses with articles sorted by title in ascending order", () => {
+  test("200: Responses with articles sorted by title with an ascending order", () => {
     return request(app)
       .get("/api/articles?sort_by=title&order=asc")
       .expect(200)
@@ -129,6 +129,27 @@ describe("GET /api/articles", () => {
           key: "title", 
           ascending: true  
       });
+    });
+  });
+  test("200: Responses with articles filtered by topic", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then((response) => {
+        const { articles } = response.body;
+
+        expect(articles.length).toBeGreaterThan(0);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("cats");
+        });
+    });
+  });
+  test("404: Responses with an error if topic is not found", () => {
+    return request(app)
+      .get("/api/articles?topic=dogs")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not Found")
     });
   });
 });
@@ -243,13 +264,20 @@ describe("PATCH /api/articles/:article_id", () => {
     const article_id = 1;
 
     return request(app)
-      .patch(`/api/articles/${article_id}`)
-      .send(incrementVotes)
+      .get(`/api/articles/${article_id}`)
       .expect(200)
       .then((response) => {
         const { article } = response.body;
+        const currentVotes = article.votes;
 
-        expect(article.votes).toBeGreaterThan(0);
+        return request(app)
+          .patch(`/api/articles/${article_id}`)
+          .send(incrementVotes)
+          .expect(200)
+          .then((response) => {
+            const { article } = response.body;
+            expect(article.votes).toBe(currentVotes + incrementVotes.inc_votes);
+          });
       });
   });
   test("200: Returns updated article with decrement votes", () => {
@@ -259,16 +287,20 @@ describe("PATCH /api/articles/:article_id", () => {
     const article_id = 1;
 
     return request(app)
-      .patch(`/api/articles/${article_id}`)
-      .send(decrementVotes)
+      .get(`/api/articles/${article_id}`)
       .expect(200)
-      .then(( response ) => {
+      .then((response) => {
         const { article } = response.body;
+        const currentVotes = article.votes;
 
-        expect(article).toMatchObject({
-          article_id: 1,
-          votes: expect.any(Number)
-        });
+        return request(app)
+          .patch(`/api/articles/${article_id}`)
+          .send(decrementVotes)
+          .expect(200)
+          .then((response) => {
+            const { article } = response.body;
+            expect(article.votes).toBe(currentVotes + decrementVotes.inc_votes);
+          });
       });
   });
   test("404: Responses with error if article ID is not found", () => {

@@ -25,22 +25,30 @@
   "GET /api/articles": {
     "description": "serves an array of all articles",
     "queries": ["author", "topic", "sort_by", "order"],
+    "queryDescriptions": {
+      "author": "filters article by the specific author",
+      "topic": "filters article by the specific topic",
+      "sort_by": "sorts article by any valid column (default: created_at)",
+      "order": "orders article in descending or ascending order (default: descending)"
+    },
     "exampleResponse": {
       "articles": [
         {
+          "article_is": 1,
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
           "body": "Text from the article..",
           "created_at": "2018-05-30T15:59:13.341Z",
           "votes": 0,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
           "comment_count": 6
         }
       ]
     }
   },
   "POST /api/topics": {
-    "description": "Creates a new topic",
+    "description": "creates a new topic",
     "body": {
       "description": "Footie!",
       "slug": "football"
@@ -50,7 +58,7 @@
     }
   },
   "POST /api/articles": {
-    "description": "Creates a new article",
+    "description": "creates a new article",
     "requestBody": {
       "title": "Seafood substitutions are increasing 2",
       "topic": "cooking",
@@ -73,8 +81,11 @@
     }
   },
   "PATCH /api/articles": {
-    "description": "Updates an article",
-    "queries": ["inc_vores"],
+    "description": "updates an article",
+    "queries": ["inc_votes"],
+    "queryDescriptions": {
+      "inc_votes": "increment/decrement article's votes"
+    },
     "exampleResponse": {
       "articles": [
         {
@@ -90,7 +101,7 @@
     }
   },
   "DELETE /api/comments": {
-    "description": "Deletes comment by comment ID",
+    "description": "deletes comment by comment ID",
     "body": {
       "name": "comment_id", 
       "description": "The comment to be deleted"
