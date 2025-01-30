@@ -22,7 +22,17 @@ exports.fetchArticleById = (article_id) => {
     });
 };
 
-exports.fetchArticles = () => {
+exports.fetchArticles = (queries) => {
+    const sort_by = queries.sort_by || "created_at";
+    const order = queries.order || "desc";
+  
+    const greenlist = ["created_at", "title", "author", "topic", "votes"];
+    const validOrders = ["asc", "desc"];
+
+    if (!greenlist.includes(sort_by) || !validOrders.includes(order)) { 
+        return Promise.reject({ status: 400, msg: "Bad Request"});
+    }; 
+
     return db
     .query(`
         SELECT 
@@ -38,7 +48,7 @@ exports.fetchArticles = () => {
         LEFT JOIN comments
         ON articles.article_id = comments.article_id
         GROUP BY articles.article_id
-        ORDER BY created_at desc; 
+        ORDER BY ${sort_by} ${order}; 
     `)
     .then((result) => {
         return result.rows;
@@ -137,3 +147,8 @@ exports.fetchUsers = () => {
         return result.rows;
     });
 };
+
+
+  
+  
+  

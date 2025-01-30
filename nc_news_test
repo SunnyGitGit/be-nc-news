@@ -1,0 +1,129 @@
+SELECT current_user;
+\l
+\?
+CREATE DATABASE my_database;
+\l
+DROP DATABASE IF EXIST my_database
+\l
+DROP DATABASE IF EXIST my_database;
+DROP DATABASE IF EXISTS my_database;
+\l
+CREATE DATABASE my_database;
+\
+CREATE TABLE northcoders (
+CREATE TABLE northcoders (northcoder_id INT PRIMARY KEY, northcoder VARCHAR(40) NOT NULL, date_of_birth DATE, northcoders_points INT DEFAULT 0);
+northcoder_id INT PRIMARY KEY, northcoder VARCHAR(40) NOT NULL, date_of_birth DATE, northcoders_points INT DEFAULT 0);
+CREATE TABLE northcoders (northcoder_id INT PRIMARY KEY, northcoder VARCHAR(40) NOT NULL, date_of_birth DATE, northcoders_points INT DEFAULT 0);
+INSERT INTO northcoders (northcoder_id, northcoder) VALUES (1, 'Callum');
+\l
+\dt
+\dt+
+\d northcoders
+\exit
+psql -f db/01-create-database.sql;
+\l
+psql -f db/01/-create-database.sql;
+-f db/01-create-database.sql;
+DROP DATABASE IF EXISTS my_database;
+CREATE DATABASE my_database;
+\l
+psql -f db/01-create-database.sql
+CREATE DATABASE my_bookshop.sql;
+psql -f db/01-create-database.sql;
+\l
+CREATE DATABASE my_bookshop;
+\l
+\c my_bookshop;
+\dt
+psql -f db/01-create-database.sql;
+-f db/01-create-database.sql;
+psql -f db/01-create-database.sql
+;
+psql -f db/01-create-database.sql;
+/q
+\q
+cd db
+\c theme_parks
+\td
+\dt
+\q
+\c theme_parks
+SELETE * FROM parks
+;
+SELETE * FROM parks;
+SELECT * FROM parks;
+\q
+\c theme_parks
+SELECT * FROM parks;
+\q
+\c theme_parks
+SELECT * FROM parks;
+\q
+\c theme_parks
+SELECT * FROM parks;
+\q
+\c theme_parks
+SELECT * FROM parks;
+\q
+\q
+\c theme_parks
+SELECT * FROM parks
+;
+SELECT * FROM rides;
+\q
+/q
+\q
+\c mitchs_rare_treasures
+\dt
+SELECT * FROM treasures;
+\q
+SELECT * FROM shops;
+\c mitchs_rare_treasures
+SELECT * FROM shops;
+\dt
+\dt
+\l
+\dt
+\q
+\c mitchs_rare_treasures
+\dt
+SELECT * FROM shops;
+\q
+\c mitchs_rare_treasures
+\dt
+SELECT * FROM shops;
+\q
+\c mitchs_rare_treasures
+SELECT * FROM shops;
+\dt
+\q
+\c mitchs_rare_treasures
+SELECT * FROM shops;
+\q
+\c mitchs_rare_treasures
+SELECT * FROM shops;
+\q
+\c mitchs_rare_treasures
+\dt
+SELECT * FROM treasures;
+\q
+\c mitchs_rare_treasures
+SELECT * FROM treasures;
+\q
+\c mitchs_rare_treasures
+SELECT * FROM treasures;
+\q
+\c mitchs_rare_treasures
+SELECT * FROM treasures;
+\q
+\c mitchs_rare_treasures
+SELECT * FROM treasures;
+\q
+\c mitchs_rare_treasures
+SELECT * FROM treasures;
+\q
+\dt
+\c northcoders
+\t
+\list
+\s nc_news_test
