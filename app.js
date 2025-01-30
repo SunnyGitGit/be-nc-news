@@ -13,7 +13,6 @@ const { getTopics,
 const { handlePSQLErrors, 
         handleCustomErrors, 
         handleServerErrors, 
-        handleNotFoundErrors 
       } = require("./errors/errors")
 
 app.use(express.json());
