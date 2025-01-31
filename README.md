@@ -1,4 +1,4 @@
-# Northcoidrs News
+# Northcoders News
 ## Project Overview
 This project is a RESTful API designed to manage articles, topics, users, and comments. It provides endpoints for CRUD(Create, Read, Update, Delete) operations and various query parameters.
 
