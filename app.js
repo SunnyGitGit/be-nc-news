@@ -1,6 +1,8 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const endpointJson  = require("./endpoints.json");
+
 const { getTopics, 
         getArticleById, 
         getArticles, 
@@ -14,6 +16,8 @@ const { handlePSQLErrors,
         handleCustomErrors, 
         handleServerErrors, 
       } = require("./errors/errors")
+
+app.use(cors());
 
 app.use(express.json());
 
